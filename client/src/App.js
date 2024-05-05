@@ -1,7 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
-import Messenger from './components/Messenger';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import Messenger from './components/Messenger';
+import AccountProvider from './context/AccountProvider';
 
 function App() {
   
@@ -9,7 +10,9 @@ function App() {
 
   return (
     <GoogleOAuthProvider clientId={clientID}>
-      <Messenger/>
+      <AccountProvider>
+        <Messenger/>
+      </AccountProvider>
     </GoogleOAuthProvider>
   );
 }
