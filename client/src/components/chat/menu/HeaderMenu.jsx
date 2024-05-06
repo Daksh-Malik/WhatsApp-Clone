@@ -8,7 +8,7 @@ const MenuOption = styled(MenuItem)`
     color: #4A4A4A;
 `
 
-export default function HeaderMenu() {
+export default function HeaderMenu({setOpenDrawer}) {
 
     const [open,Setopen] = useState(null);
 
@@ -38,7 +38,7 @@ export default function HeaderMenu() {
                     horizontal: 'right'
                 }}
             >
-                <MenuOption onClick={handleClose}>Profile</MenuOption>
+                <MenuOption onClick={()=>{handleClose();setOpenDrawer(true);}}>Profile</MenuOption>
                 <MenuOption onClick={handleClose}>Logout</MenuOption>
             </Menu>
         </>
