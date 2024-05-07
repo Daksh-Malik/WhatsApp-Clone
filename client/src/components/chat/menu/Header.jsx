@@ -4,7 +4,7 @@ import { Box, styled } from '@mui/material'
 import { Chat as MessageIcon} from '@mui/icons-material'
 import HeaderMenu from './HeaderMenu'
 import InfoDrawer from '../../drawer/InfoDrawer'
-import { emptyProfilePicture } from '../../../assets/assets'
+import { defaultProfilePicture } from '../../../assets/assets'
 
 const Component = styled(Box)`
     height: 44px;
@@ -48,7 +48,7 @@ export default function Header() {
             account.picture ? 
             <Image src={account.picture} alt="DP" onClick={toggleDrawer}/>
             :
-            <Image src={emptyProfilePicture} alt="DP" onClick={toggleDrawer}/>
+            <Image src={defaultProfilePicture} alt="DP" onClick={toggleDrawer}/>
             }
           <Wrapper>
             <MessageIcon/>

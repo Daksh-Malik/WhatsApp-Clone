@@ -14,7 +14,7 @@ const StyledDivider = styled(Divider)`
     opacity: 0.6;
 `
 
-export default function Conversations() {
+export default function Conversations({text}) {
 
     const [users, SetUsers] = useState([]);
 
@@ -23,10 +23,11 @@ export default function Conversations() {
     useEffect(() => {
         const fetchData = async () => {
             let response = await getUsers();
-            SetUsers(response);
+            const filteredData = response.filter(user => user.name.toLowerCase().includes(text.toLowerCase())); // search logic
+            SetUsers(filteredData);
         }
         fetchData();
-    },[]);
+    },[text]); //here dependency is text means whenever there is change in text this useEffect will be called
 
   return (
     <Component>

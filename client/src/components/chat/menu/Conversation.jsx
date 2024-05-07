@@ -1,6 +1,8 @@
 import { Box, Typography, styled } from '@mui/material'
-import React from 'react'
-import { emptyProfilePicture } from '../../../assets/assets';
+import React, { useContext } from 'react'
+import { defaultProfilePicture } from '../../../assets/assets';
+import { AccountContext } from '../../../context/AccountProvider';
+import { setConversation } from '../../../api/api';
 
 const Component = styled(Box)`
     height: 45px;
@@ -22,15 +24,23 @@ const Container = styled(Box)`
 `;
 
 export default function Conversation({user}) {
+
+    const {setPerson, account} = useContext(AccountContext);
+
+    const getUser = async ()=> {
+        setPerson(user);
+        await setConversation({senderID: account.sub, receiverID: user.sub});
+    }
+
   return (
     <>
-    <Component>
+    <Component onClick={()=>getUser()}>
         <Box>
         {
             user.picture ? 
             <Image src={user.picture} alt="DP" />
             :
-            <Image src={emptyProfilePicture} alt="DP" />
+            <Image src={defaultProfilePicture} alt="DP" />
             }
         </Box>
         <Box>
