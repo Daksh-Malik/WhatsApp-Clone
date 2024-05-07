@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { Box, styled, Typography } from '@mui/material'
 import { AccountContext } from '../../context/AccountProvider'
+import { emptyProfilePicture } from '../../assets/assets'
 
 const ImageContainer = styled(Box)`
     display: flex;
@@ -42,7 +43,12 @@ export default function Profile() {
   return (
     <>
         <ImageContainer>
+            {
+            account.picture ? 
             <Image src={account.picture} alt="DP" />
+            :
+            <Image src={emptyProfilePicture} alt="DP" />
+            }
         </ImageContainer>
         <BoxWrapper>
             <Typography>Your name</Typography>
