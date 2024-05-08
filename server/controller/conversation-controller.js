@@ -10,6 +10,7 @@ export const newConversation = async (request, response) => {
 
         if(exist){
             return response.status(200).json('Conversation already exists');
+            // return response.status(200).json(exist);
         }
 
         const newConversation = new Conversation({
@@ -22,3 +23,15 @@ export const newConversation = async (request, response) => {
         return response.status(500).json(error.message);
     }
 }  
+
+export const getConversation = async (request, response) => {
+    try {
+        const senderID = request.body.senderId;
+        const receiverID = request.body.receiverId;
+        
+        let conversation = await Conversation.findOne({ members: {$all: [receiverID, senderID]}});
+        return response.status(200).json(conversation);
+    } catch (error) {
+        return response.status(500).json(error.message);
+    }
+}
