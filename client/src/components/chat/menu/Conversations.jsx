@@ -18,7 +18,7 @@ export default function Conversations({text}) {
 
     const [users, SetUsers] = useState([]);
 
-    const {account} = useContext(AccountContext);
+    const {account, socket, setActiveUsers} = useContext(AccountContext);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -28,6 +28,13 @@ export default function Conversations({text}) {
         }
         fetchData();
     },[text]); //here dependency is text means whenever there is change in text this useEffect will be called
+
+    useEffect(() => {
+        socket.current.emit('addUsers', account);
+        socket.current.on('getUsers', users => {
+            setActiveUsers(users);
+        });
+    }, [account])
 
   return (
     <Component>

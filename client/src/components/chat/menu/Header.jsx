@@ -32,6 +32,10 @@ const Image = styled('img')({
   borderRadius: "50%"
 })
 
+const IconStyle = styled(MessageIcon)`
+  color: rgba(84,101,111,1)
+`
+
 export default function Header() {
 
   const {account} = useContext(AccountContext);
@@ -51,7 +55,7 @@ export default function Header() {
             <Image src={defaultProfilePicture} alt="DP" onClick={toggleDrawer}/>
             }
           <Wrapper>
-            <MessageIcon/>
+            <IconStyle/>
             <HeaderMenu setOpenDrawer={setOpenDrawer}/>
           </Wrapper>
       </Component>

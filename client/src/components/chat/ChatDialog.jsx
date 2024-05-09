@@ -26,7 +26,7 @@ const style = {
     maxWidth: '100%',
     maxheight: '100%',
     boxShadow: 'none',
-    overflow: 'hidden'
+    overflow: 'hidden',
 }
 
 export default function ChatDialog() {

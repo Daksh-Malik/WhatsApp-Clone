@@ -1,6 +1,7 @@
 import { AttachFile, EmojiEmotionsOutlined, Mic } from '@mui/icons-material'
 import { Box, InputBase, styled } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { uploadFile } from '../../../api/api';
 
 const Container = styled(Box)`
     height: 55px;
@@ -11,7 +12,7 @@ const Container = styled(Box)`
     padding: 0 15px;
     &  > * {
         margin: 5px;
-        color: #919191;
+        color: rgba(84,101,111,1)
     }
 `;
 
@@ -34,12 +35,38 @@ const ClipIcon = styled(AttachFile)`
     transform: rotate(40deg)
 `;
 
-export default function Footer({sendText, setValue, value}) {
+export default function Footer({sendText, setValue, value, file, setFile}) {
+
+    useEffect(()=>{
+        const getImage = async () => {
+            if(file){
+                const data = new FormData(); //as we need to send file in chunks
+                data.append("name", file.name);
+                data.append("file", file);
+
+                // await uploadFile(data);
+            }
+        }
+        getImage();
+    },[file]);
     
+    const onFileChange = (e) => {
+        setFile(e.target.files[0]);
+        setValue(e.target.files[0].name);
+    }
+
   return (
     <Container>
         <EmojiEmotionsOutlined/>
-        <ClipIcon/>
+        <label htmlFor="fileInput">
+            <ClipIcon/>
+        </label>
+        <input 
+            type='file' 
+            id='fileInput' 
+            style={{display: 'none'}}
+            onChange={(e)=>onFileChange(e)}
+        />
         <Search>
             <InputField 
                 placeholder='Type a message' 

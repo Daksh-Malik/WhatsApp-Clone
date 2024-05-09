@@ -1,5 +1,5 @@
 import { Box, styled } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import Footer from './Footer';
 import { AccountContext } from '../../../context/AccountProvider';
 import { getMessages, newMessage } from '../../../api/api';
@@ -19,14 +19,27 @@ const Container = styled(Box)`
     padding: 1px 40px;
 `
 
-export default function Messages({person, conversation}) {
+export default function Messages({ person, conversation }) {
 
-  const {account} = useContext(AccountContext);
+  const { account, socket, newMessageFlag, setNewMessageFlag } = useContext(AccountContext);
+
   const [value, setValue] = useState('');
   const [messages, setMessages] = useState([]);
-  const [newMessageFlag, setNewMessageFlag] = useState(false);
+  const [file, setFile] = useState([]);
+  const [incomingMessage, setIncomingMessage] = useState(null);
 
-  useEffect(()=>{
+  const messageBodyRef = useRef(null);
+
+  useEffect(() => {
+    socket.current.on('getMessage', data => {
+      setIncomingMessage({
+        ...data,
+        createdAt: Date.now()
+      })
+    })
+  },[])
+
+  useEffect(() => {
     const getMessageDetails = async () => {
       let data = await getMessages(conversation._id);
       setMessages(data);
@@ -34,9 +47,20 @@ export default function Messages({person, conversation}) {
     conversation._id && getMessageDetails();
   },[person._id, conversation._id, newMessageFlag]);
 
+  useEffect(() => {
+    if (messageBodyRef.current) {
+      messageBodyRef.current.scrollTop = messageBodyRef.current.scrollHeight - messageBodyRef.current.clientHeight;
+    }
+  },[messages])
+
+  useEffect(() => {
+    incomingMessage && conversation?.members?.includes(incomingMessage.senderId) &&
+      setMessages((prev) => [...prev, incomingMessage]);
+  },[incomingMessage, conversation])
+
   const sendText = async (e) => {
     const code = e.keyCode || e.which;
-    if(code === 13){
+    if (code === 13) {
       let message = {
         senderId: account.sub,
         receiverId: person.sub,
@@ -44,7 +68,9 @@ export default function Messages({person, conversation}) {
         type: 'text',
         text: value
       }
-      
+
+      socket.current.emit('sendMessage', message); //real time sending message through socket
+
       await newMessage(message);
 
       setValue(''); //after sending the message value returns to empty
@@ -54,16 +80,22 @@ export default function Messages({person, conversation}) {
 
   return (
     <Wrapper>
-        <Component>
-          {
-            messages && messages.map(message => (
-              <Container>
-                <Message message={message}/>
-              </Container>
-            ))
-          }
-        </Component>
-        <Footer sendText={sendText} setValue={setValue} value={value}/>
+      <Component ref={messageBodyRef}>
+        {
+          messages && messages.map((message, index) => (
+            <Container key={index}>
+              <Message message={message} />
+            </Container>
+          ))
+        }
+      </Component>
+      <Footer
+        sendText={sendText}
+        setValue={setValue}
+        value={value}
+        file={file}
+        setFile={setFile}
+      />
     </Wrapper>
   )
 }

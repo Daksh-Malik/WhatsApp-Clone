@@ -8,6 +8,10 @@ const MenuOption = styled(MenuItem)`
     color: #4A4A4A;
 `
 
+const IconStyle = styled(MoreVert)`
+  color: rgba(84,101,111,1)
+`
+
 export default function HeaderMenu({setOpenDrawer}) {
 
     const [open,Setopen] = useState(null);
@@ -22,7 +26,7 @@ export default function HeaderMenu({setOpenDrawer}) {
 
     return (
         <>  
-            <MoreVert onClick={handleClick}/> {/*this icon is acting as anchor here*/}
+            <IconStyle onClick={handleClick}/> {/*this icon is acting as anchor here*/}
             <Menu
                 anchorEl={open}
                 keepMounted
